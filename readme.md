@@ -32,31 +32,39 @@ Criptografia homomorfica/
 ## 🚀 Instalación
 
 1. Clonar el repositorio:
+
    ```bash
+   git clone [https://github.com/Alba-Tab/Criptografia-homomorfica.git](https://github.com/Alba-Tab/Criptografia-homomorfica.git)
    ```
 
-git clone [https://github.com/Alba-Tab/Criptografia-homomorfica.git](https://github.com/Alba-Tab/Criptografia-homomorfica.git)
-
-````
 2. Crear y activar entorno virtual:
-   ```bash
+
+```bash
 python -m venv venv
 venv\Scripts\activate   # Windows
-````
+```
 
 3. Instalar dependencias:
-   ```bash
-   ```
 
-pip install --upgrade pip pip install tenseal fastapi uvicorn python-multipart requests
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-````
+o manualmente instalar las dependencias
+
+```bash
+pip install --upgrade pip
+pip install tenseal fastapi uvicorn python-multipart request
+```
 
 ## 📝 Uso local (monolítico)
+
 Ejecuta `main.py` para probar en local sin servidor:
+
 ```bash
 python main.py
-````
+```
 
 Imprime sueldos, bonus, total y retención usando operaciones homomórficas.
 
@@ -72,13 +80,13 @@ uvicorn server:app --reload
 
 - **POST /operar/sumar**
 - **POST /operar/multiplicar**
-- **POST /operar/multiplicar\_escalar**
+- **POST /operar/multiplicar_escalar**
 
 Cada petición multipart/form-data debe incluir:
 
 - `vec1_file`: bytes del primer vector cifrado
 - `vec2_file` (opcional para escalar): bytes del segundo vector cifrado
-- `escalar` (solo para multiplicar\_escalar): float en form-data
+- `escalar` (solo para multiplicar_escalar): float en form-data
 
 La respuesta es `application/octet-stream` con el vector cifrado resultante.
 
@@ -104,10 +112,3 @@ El cliente:
 3. Envía petición a la API
 4. Deserializa y descifra resultado
 5. Muestra vector en claro
-
-##
-
----
-
-
-
