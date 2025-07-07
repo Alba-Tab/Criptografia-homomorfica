@@ -1,0 +1,34 @@
+# Entorno virtual
+venv/
+__pycache__/
+
+# Dependencias instaladas
+*.egg-info/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Archivos de Python compilados
+*.py[cod]
+*.pyo
+
+# Carpeta de datos temporales
+datos/
+resultados/
+
+# IDEs y editores
+.vscode/
+.idea/
+
+# Archivos de sistema y logs
+*.log
+*.tmp
+*.bak
+
+# Archivos sensibles
+*.key
+*.pem
+
+# Build / compilaciones
+build/
+dist/
+*.whl
