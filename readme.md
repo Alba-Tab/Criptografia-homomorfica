@@ -63,9 +63,10 @@ Imprime sueldos, bonus, total y retención usando operaciones homomórficas.
 ## 🌐 API REST con FastAPI
 
 Arranca el servicio:
-
+## ejecutar el streamlit y uvicorn
 ```bash
 uvicorn server:app --reload
+streamlit run app.py 
 ```
 
 ### Endpoints disponibles
