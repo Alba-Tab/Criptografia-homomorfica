@@ -64,6 +64,7 @@ Imprime sueldos, bonus, total y retención usando operaciones homomórficas.
 
 Arranca el servicio:
 ## ejecutar el streamlit y uvicorn
+## ejecutar cada uno en una terminal diferente 
 ```bash
 uvicorn server:app --reload
 streamlit run app.py 
