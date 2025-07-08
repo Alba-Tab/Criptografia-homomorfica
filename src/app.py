@@ -13,9 +13,9 @@ contexto = create_context()
 
 # Diseño de la ventana GUI
 layout = [
-    [sg.Text("Vector A (enteros, separados por comas):"), sg.Input(key="-A-", size=(30,1))],
-    [sg.Text("Vector B (enteros, separados por comas):"), sg.Input(key="-B-", size=(30,1))],
-    [sg.Text("Escalar (int, solo para multiplicación escalar):"), sg.Input(key="-FACTOR-", size=(10,1), default_text="1")],
+    [sg.Text("Vector A (números, separados por comas):"), sg.Input(key="-A-", size=(30,1))],
+    [sg.Text("Vector B (números, separados por comas):"), sg.Input(key="-B-", size=(30,1))],
+    [sg.Text("Escalar (número, solo para multiplicación escalar):"), sg.Input(key="-FACTOR-", size=(10,1), default_text="1")],
     [sg.Text("Operación:"),
      sg.Combo([
          "sumar",                  # suma elemento a elemento de A y B
@@ -54,18 +54,16 @@ while True:
     if event == "Ejecutar":
         try:
             op = values["-OP-"]
-            # Parsear vectores y factor
-            lista_a_int = [int(x) for x in values["-A-"].split(",") if x.strip()]
-            lista_b_int = [int(x) for x in values["-B-"].split(",") if x.strip()]
-            factor = int(values.get("-FACTOR-", 1))
+            # Parsear vectores y factor como flotantes para soportar decimales
+            lista_a = [float(x.strip()) for x in values["-A-"].split(",") if x.strip()]
+            lista_b = [float(x.strip()) for x in values["-B-"].split(",") if x.strip()]
+            factor = float(values.get("-FACTOR-", 1))
 
             # Mostrar vectores en claro
-            window["-DATOS_A-"].update("\n".join(f"{i+1}: {v}" for i, v in enumerate(lista_a_int)))
-            window["-DATOS_B-"].update("\n".join(f"{i+1}: {v}" for i, v in enumerate(lista_b_int)))
+            window["-DATOS_A-"].update("\n".join(f"{i+1}: {v}" for i, v in enumerate(lista_a)))
+            window["-DATOS_B-"].update("\n".join(f"{i+1}: {v}" for i, v in enumerate(lista_b)))
 
-            # Preparar cifrado y envío
-            lista_a = [float(v) for v in lista_a_int]
-            lista_b = [float(v) for v in lista_b_int]
+            # Preparar cifrado y envío (ya no necesita conversión adicional)
             enc_a = encrypt(contexto, lista_a)
             files = {"vec1_file": ("a.ts", io.BytesIO(enc_a.serialize()), "application/octet-stream")}
             data = {}
@@ -102,14 +100,14 @@ while True:
                     total = vals if not isinstance(vals, list) else vals[0]
                 
                 # Verificación local para comparar
-                suma_local = sum(lista_a_int)
-                salida = f" {suma_local}"
+                suma_local = sum(lista_a)
+                salida = f"Suma de elementos =  {suma_local:.4f}"
             elif op == "multiplicar":
                 homo = ", ".join(f"{r:.4f}" for r in vals)
-                local = ", ".join(f"{a*b:.4f}" for a, b in zip(lista_a_int, lista_b_int))
-                salida = f" {local}"
+                local = ", ".join(f"{a*b:.4f}" for a, b in zip(lista_a, lista_b))
+                salida = f"{local}"
             else:  # multiplicar_escalar
-                salida = "\n".join(f"{v} * {factor} = {r:.4f}" for v, r in zip(lista_a_int, vals))
+                salida = "\n".join(f"{v} * {factor} = {r:.4f}" for v, r in zip(lista_a, vals))
 
             window["-RESULT-"].update(salida)
 
