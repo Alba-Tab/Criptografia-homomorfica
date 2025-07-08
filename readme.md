@@ -48,7 +48,7 @@ venv\Scripts\activate   # Windows
    ```bash
    ```
 
-pip install --upgrade pip pip install tenseal fastapi uvicorn python-multipart requests
+pip install -r requirements.txt
 
 ````
 
