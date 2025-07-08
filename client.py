@@ -1,39 +1,35 @@
 import argparse
-import requests
 from cifrado import create_context, encrypt, decrypt
-from tenseal import ckks_vector_from
+import requests
 
+def parse_vector(texto):
+    return [float(x) for x in texto.split(",")]
 
-def parse_vector(s):
-    return [float(x) for x in s.split(",") if x.strip()]
-
-
-def send_request(contexto, vect_bytes, operacion, vect2_bytes=None, escalar=None):
-    files = {"vec1_file": ("v1.bin", vect_bytes, "application/octet-stream")}
-    data = {}
+# ...existing imports...
+def send_request(context, v1_bytes, operacion, vect2_bytes=None, escalar=None):
+    url = f"http://127.0.0.1:8000/operar/{operacion}"
+    files = {
+        "v1": v1_bytes,
+        "context": context.serialize(save_secret_key=True)
+    }
     if vect2_bytes:
-        files["vec2_file"] = ("v2.bin", vect2_bytes, "application/octet-stream")
+        files["v2"] = vect2_bytes
+    data = {}
     if escalar is not None:
         data["escalar"] = escalar
-    url = f"http://127.0.0.1:8000/operar/{operacion}"
-    resp = requests.post(url, files=files, data=data)
-    resp.raise_for_status()
-    return ckks_vector_from(contexto, resp.content)
+    response = requests.post(url, files=files, data=data)
+    response.raise_for_status()
+    from tenseal import ckks_vector_from
+    return ckks_vector_from(context, response.content)
 
 def main():
-    parser = argparse.ArgumentParser(description="Cliente homomórfico CKKS")
-    parser.add_argument("operacion",
-                        choices=["sumar", "multiplicar", "multiplicar_escalar"])
-    parser.add_argument("--v1", required=True,
-                        help="Vector 1 como coma-separated, ej: 1.0,2.0,3.0")
-    parser.add_argument("--v2",
-                        help="Vector 2 como coma-separated (no para escalar)")
-    parser.add_argument("--escalar", type=float,
-                        help="Escalar (solo para multiplicar_escalar)")
-
+    parser = argparse.ArgumentParser()
+    parser.add_argument("operacion", choices=["sumar", "multiplicar", "multiplicar_escalar"])
+    parser.add_argument("--v1", required=True, help="Vector 1 como coma-separated, ej: 1.0,2.0,3.0")
+    parser.add_argument("--v2", help="Vector 2 como coma-separated (no para escalar)")
+    parser.add_argument("--escalar", type=float, help="Escalar (solo para multiplicar_escalar)")
     args = parser.parse_args()
 
-    # 1. Crear contexto y cifrar vectores
     contexto = create_context()
     v1 = parse_vector(args.v1)
     v1_cif = encrypt(contexto, v1)
@@ -45,7 +41,6 @@ def main():
         v2 = parse_vector(args.v2)
         v2_cif = encrypt(contexto, v2)
 
-    # 2. Enviar petición y recibir resultado cifrado
     result_cif = send_request(
         contexto,
         v1_cif.serialize(),
@@ -54,7 +49,6 @@ def main():
         escalar=args.escalar
     )
 
-    # 3. Desencriptar y mostrar
     result = decrypt(result_cif)
     print("Resultado:", [round(x, 3) for x in result])
 

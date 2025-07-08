@@ -1,21 +1,19 @@
-
-def suma(vector_cifrado1, vector_cifrado2):
+def sumar(v1_cif, v2_cif):
     """
     Suma dos vectores de la misma longitud.
     """
     # TenSEAL comprueba internamente la longitud y el contexto
-    return vector_cifrado1 + vector_cifrado2
+    return v1_cif + v2_cif
 
-def multiplicacion(vector_cifrado, vector_cifrado2):
+def multiplicar(v1_cif, v2_cif):
     """
     Multiplica dos vectores cifrados .
     """
     # TenSEAL comprueba internamente el contexto
-    return vector_cifrado * vector_cifrado2
+    return v1_cif * v2_cif
 
-def multiplicacion_por_escalar(vector_cifrado, escalar):
+def multiplicar_escalar(v1_cif, escalar):
     """
     Multiplica un vector cifrado por un escalar.
     """
-    # TenSEAL comprueba internamente el contexto
-    return vector_cifrado * escalar
+    return v1_cif * escalar
