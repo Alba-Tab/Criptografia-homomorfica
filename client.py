@@ -1,6 +1,6 @@
 import argparse
 import requests
-from cifrado import create_context, encrypt, decrypt
+from src.cifrado import create_context, encrypt, decrypt
 from tenseal import ckks_vector_from
 
 

@@ -1,5 +1,5 @@
-from cifrado import create_context, encrypt, decrypt
-from operaciones import suma
+from src.cifrado import create_context, encrypt, decrypt
+from src.operaciones import suma
 from tenseal import ckks_vector_from
 import os
 

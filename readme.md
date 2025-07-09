@@ -1,4 +1,20 @@
-# Proyecto de Cifrado Homomórfico Parcial en Python con TenSEAL
+# Criptografía Homomórfica con CKKS
+
+Sistema de criptografía homomórfica que permite realizar operaciones aritméticas sobre datos cifrados sin necesidad de descifrarlos, implementado con el esquema CKKS (Cheon-Kim-Kim-Song).
+
+## 🚀 Características
+
+- **Operaciones soportadas:**
+  - Suma elemento a elemento de dos vectores
+  - Multiplicación elemento a elemento de dos vectores
+  - Multiplicación por escalar
+  - Suma de todos los elementos de un vector
+- **Interfaz gráfica** intuitiva con PySimpleGUI
+- **API REST** con FastAPI para operaciones en servidor
+- **Cifrado CKKS** para números de punto flotante
+- **Verificación automática** comparando resultados homomórficos vs. locales
+
+## Proyecto de Cifrado Homomórfico Parcial en Python con TenSEAL
 
 Este proyecto implementa un sistema completo de **cifrado homomórfico parcial** utilizando la librería [TenSEAL](https://github.com/OpenMined/TenSEAL) y **FastAPI** para exponer operaciones como servicio web. Permite realizar operaciones aritméticas (suma, multiplicación elemento a elemento, multiplicación por escalar) directamente sobre datos cifrados.
 
@@ -32,55 +48,127 @@ Criptografia homomorfica/
 ## 🚀 Instalación
 
 1. Clonar el repositorio:
+
    ```bash
+   git clone [https://github.com/Alba-Tab/Criptografia-homomorfica.git](https://github.com/Alba-Tab/Criptografia-homomorfica.git)
    ```
 
-git clone [https://github.com/Alba-Tab/Criptografia-homomorfica.git](https://github.com/Alba-Tab/Criptografia-homomorfica.git)
-
-````
 2. Crear y activar entorno virtual:
-   ```bash
+
+```bash
 python -m venv venv
 venv\Scripts\activate   # Windows
-````
+```
 
 3. Instalar dependencias:
-   ```bash
-   ```
 
+<<<<<<< HEAD
 pip install -r requirements.txt
+=======
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+>>>>>>> 2c30aae67f24b550d54d3365ed095e3253cc0296
 
-````
+o manualmente instalar las dependencias
+
+```bash
+pip install --upgrade pip
+pip install tenseal fastapi uvicorn python-multipart request
+```
 
 ## 📝 Uso local (monolítico)
+
 Ejecuta `main.py` para probar en local sin servidor:
+
 ```bash
 python main.py
-````
+```
 
 Imprime sueldos, bonus, total y retención usando operaciones homomórficas.
 
-## 🌐 API REST con FastAPI
+## 🚀 Uso
 
-Arranca el servicio:
+### 1. Iniciar el servidor
 
 ```bash
+python server.py
+# o tambien
 uvicorn server:app --reload
 ```
 
-### Endpoints disponibles
+El servidor estará disponible en `http://127.0.0.1:8000`
 
-- **POST /operar/sumar**
-- **POST /operar/multiplicar**
-- **POST /operar/multiplicar\_escalar**
+### 2. Ejecutar la aplicación cliente
 
-Cada petición multipart/form-data debe incluir:
+```bash
+python src/app.py
+```
 
-- `vec1_file`: bytes del primer vector cifrado
-- `vec2_file` (opcional para escalar): bytes del segundo vector cifrado
-- `escalar` (solo para multiplicar\_escalar): float en form-data
+### 3. Usar la interfaz gráfica
 
-La respuesta es `application/octet-stream` con el vector cifrado resultante.
+1. **Ingresa vectores:** Números enteros separados por comas
+2. **Selecciona operación:** Suma, multiplicación, etc.
+3. **Genera datos aleatorios:** (Opcional) Para pruebas rápidas
+4. **Ejecuta:** Ve los resultados homomórficos vs. locales
+
+## 🏗️ Estructura del proyecto
+
+```
+Criptografia homomorfica/
+├── src/
+│   ├── app.py              # Interfaz gráfica cliente
+│   ├── cifrado.py          # Funciones de cifrado/descifrado
+│   └── operaciones.py      # Operaciones homomórficas
+├── server.py               # Servidor FastAPI
+├── requirements.txt        # Dependencias
+└── README.md              # Este archivo
+```
+
+## 🔧 API Endpoints
+
+### `POST /operar/{operacion}`
+
+**Operaciones disponibles:**
+
+- `sumar` - Suma elemento a elemento
+- `multiplicar` - Multiplicación elemento a elemento
+- `multiplicar_escalar` - Multiplicación por escalar
+- `sumar_elementos` - Suma todos los elementos
+
+**Parámetros:**
+
+- `vec1_file`: Archivo con vector cifrado (requerido)
+- `vec2_file`: Segundo vector cifrado (para suma/multiplicación)
+- `escalar`: Valor escalar (para multiplicación escalar)
+
+## 📊 Ejemplo de uso
+
+```python
+# Vectores de ejemplo
+A = [2, 4, 6]
+B = [1, 3, 5]
+
+# Resultados esperados:
+# Suma: [3, 7, 11]
+# Multiplicación: [2, 12, 30]
+# Suma elementos A: 12
+# Multiplicación escalar A*2: [4, 8, 12]
+```
+
+### Dependencias
+
+```bash
+# Reinstalar dependencias
+pip install --force-reinstall -r requirements.txt
+```
+
+## 📈 Rendimiento
+
+- **Vectores pequeños (≤10 elementos):** Tiempo de respuesta < 1s
+- **Vectores medianos (≤100 elementos):** Tiempo de respuesta < 5s
+- **Limitaciones:** CKKS tiene overhead significativo vs. operaciones locales
 
 ## 📡 Cliente CLI
 
@@ -104,10 +192,3 @@ El cliente:
 3. Envía petición a la API
 4. Deserializa y descifra resultado
 5. Muestra vector en claro
-
-##
-
----
-
-
-

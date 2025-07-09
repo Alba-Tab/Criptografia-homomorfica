@@ -1,7 +1,7 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Response, Form
 from typing   import Optional
-from cifrado import create_context
-from operaciones import suma, multiplicacion, multiplicacion_por_escalar
+from src.cifrado import create_context
+from src.operaciones import suma, multiplicacion, multiplicacion_por_escalar, suma_por_reduccion
 from tenseal import ckks_vector_from
 
 app = FastAPI(title="API Homomórfica CKKS")
@@ -13,6 +13,7 @@ OPERACIONES = {
     "sumar": suma,
     "multiplicar": multiplicacion,
     "multiplicar_escalar": multiplicacion_por_escalar,
+    "sumar_elementos": suma_por_reduccion,
 }
 
 @app.post("/operar/{operacion}")
@@ -42,7 +43,13 @@ async def operar(
             if escalar is None:
                 raise HTTPException(status_code=400, detail="Falta parámetro 'escalar'")
             result_cif = func(vec1_cif, escalar)
+        elif operacion == "sumar_elementos":
+            # Solo necesita un vector para sumar todos sus elementos
+            result_cif = func(vec1_cif)
         else:
+            # Operaciones que necesitan dos vectores (sumar, multiplicar)
+            if vec2_file is None:
+                raise HTTPException(status_code=400, detail="Falta vec2_file para operación de dos vectores")
             vec2_bytes = await vec2_file.read()
             vec2_cif = ckks_vector_from(contexto, vec2_bytes)
             result_cif = func(vec1_cif, vec2_cif)

@@ -15,6 +15,8 @@ def create_context():
     # Establece el nivel de precisión y el tamaño del espacio de escala
     context.global_scale = 2**40
     context.generate_galois_keys()
+    context.generate_relin_keys()
+    
     return context
 
 def encrypt(context, data):
